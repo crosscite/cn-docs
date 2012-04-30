@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="title" content="DOI Content Negotiation"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-03-13 10:31:53 GMT"/>
+<meta name="generated" content="2012-04-30 10:03:35 BST"/>
 <meta name="author" content="Karl Ward"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -113,9 +113,8 @@
 </ul>
 </li>
 <li><a href="#sec-4">4 Supported Content Types</a></li>
-<li><a href="#sec-5">5 Determine a DOI's Registration Agency</a></li>
-<li><a href="#sec-6">6 CrossRef and DataCite</a></li>
-<li><a href="#sec-7">7 Getting Help</a></li>
+<li><a href="#sec-5">5 CrossRef and DataCite</a></li>
+<li><a href="#sec-6">6 Getting Help</a></li>
 </ul>
 </div>
 </div>
@@ -129,16 +128,20 @@
   DOIs provide a persistent link to content. They identify many types of work, 
   from journal articles to research data sets. Typically, someone interacting with 
   DOIs will be a researcher, who will resolve DOIs found in scholarly references 
-  to content using the <a href='http://dx.doi.org'>DOI resolver</a>. Such
-  researchers may not even realise they are using DOIs and the resolver
-  since they may be follow dx.doi.org web links without interacting with the URL
-  itself.
+  to content using a <a href='http://dx.doi.org'>DOI resolver</a>. Such
+  researchers may not even realise they are using DOIs and a DOI resolver
+  since they may follow links with embedded DOIs.
 </p>
 <p>
   Yet DOIs can provide more than a permanent, indirect link to content. DOI 
   registration agencies such as CrossRef and DataCite collect bibliographic metadata 
-  about the works they link to. This metadata can be retrieved from the DOI resolver
+  about the works they link to. This metadata can be retrieved from a DOI resolver
   too, using content negotation to request a particular representation of the metadata.
+</p>
+<p>
+  For some DOIs content negotiation can be used to retreive different representations
+  of a work. For example, some DataCite DOIs identify data sets that may be available
+  in a number of data formats and container formats.
 </p>
 </div>
 
@@ -154,10 +157,9 @@
   location of a DOI. For example, the DOI "10.1126/science.169.3946.635"
   redirects to a landing page describing the article, "The Structure of Ordinary Water".
   Content negotiated requests to dx.doi.org that ask for a content type which isn't
-  "text/html" will be redirected to a metadata service hosted by DOI's registration
-  agency. At time of writing, CrossRef and DataCite support content negotiated DOIs via
-  <a href="http://data.crossref.org">http://data.crossref.org</a> and <a href="http://data.datacite.org">http://data.datacite.org</a>. mEDRA DOIs are also supported
-  via the CrossRef metadata service.
+  "text/html" will be redirected to a metadata service hosted by the DOI's registration
+  agency. CrossRef and DataCite support content negotiated DOIs via <a href="http://data.crossref.org">http://data.crossref.org</a> 
+  and <a href="http://data.datacite.org">http://data.datacite.org</a>.
 </p>
 
 
@@ -200,7 +202,7 @@ http://data.crossref.org/10.1126/science.169.3946.635
   </div></div>
 
 <p>
-  Requests for a data type redirect to a RA metadata service.
+  Requests for a data type redirect to a registration agency's metadata service.
 </p>
 </div>
 
@@ -212,9 +214,14 @@ http://data.crossref.org/10.1126/science.169.3946.635
 
 
 <p>
-  Content negotiation allows a web browser or some other computer program to request
-  a particular representation of a web resource. The DOI resolver uses content
-  negotation to provide different representations of metadata associated with DOIs.
+  Content negotiation allows a user to request a particular representation of a web 
+  resource. DOI resolvers uses content negotation to provide different representations 
+  of metadata associated with DOIs.
+</p>
+<p>
+  A content negotiated request to a DOI resolver is much like a standard HTTP request,
+  except server-driven negotiation will take place based on the list of acceptable
+  content types a client provides.
 </p>
 
 </div>
@@ -226,8 +233,9 @@ http://data.crossref.org/10.1126/science.169.3946.635
 
 <p>
    Making a content negotiated request requires the use of a HTTP header, "Accept".
-   Acceptable content types are declared in the Accept header, each with an optional
-   "quality" value indicating its relative suitability. For example, a client that
+   Content types that are acceptable to the client (those that it knows how to parse), 
+   each with an optional "quality" value indicating its relative suitability. For example, 
+   a client that
    wishes to receive citeproc JSON if it is available, but which can also handle
    RDF XML if citeproc JSON is unavailable, would make a request with an Accept
    header listing both "application/citeproc+json" and "application/rdf+xml":
@@ -235,7 +243,7 @@ http://data.crossref.org/10.1126/science.169.3946.635
 
 
 
-<pre class="example">$ curl -LH "Accept: application/rdf+xml;q=0.5, application/citeproc+json;q=1.0" http://dx.doi.org/10.5555/test_doi
+<pre class="example">$ curl -LH "Accept: application/rdf+xml;q=0.5, application/citeproc+json;q=1.0" http://dx.doi.org/10.1126/science.169.3946.635
 </pre>
 
 
@@ -248,7 +256,7 @@ http://data.crossref.org/10.1126/science.169.3946.635
 
 
 
-<pre class="example">$ curl -LH "Accept: application/citeproc+json, application/rdf+xml" http://dx.doi.org/10.5555/test_doi
+<pre class="example">$ curl -LH "Accept: application/citeproc+json, application/rdf+xml" http://dx.doi.org/10.1126/science.169.3946.635
 </pre>
 
 
@@ -270,9 +278,9 @@ http://data.crossref.org/10.1126/science.169.3946.635
 </thead>
 <tbody>
 <tr><td class="right">200</td><td class="left">The request was OK.</td></tr>
-<tr><td class="right">400</td><td class="left">The DOI requested is malformed, or some other unspecified error.</td></tr>
+<tr><td class="right">400</td><td class="left">Malformed DOI specified (DOI prefix or suffix not present)</td></tr>
 <tr><td class="right">404</td><td class="left">The DOI requested doesn't exist.</td></tr>
-<tr><td class="right">406</td><td class="left">Data service can't serve any of your requested content types.</td></tr>
+<tr><td class="right">406</td><td class="left">Can't serve any requested content type.</td></tr>
 </tbody>
 </table>
 
@@ -280,6 +288,11 @@ http://data.crossref.org/10.1126/science.169.3946.635
 <p>
    Individual RA metadata services may utilise additional response codes but they will
    always use the response codes above in event of the case described.
+</p>
+<p>
+   If multiple content types specified by the client are supported by a DOI then the
+   content type with the highest "q" value (or, if no "q" values are specified, the one
+   that appears first in the "accept" header) will be returned.
 </p>
 </div>
 </div>
@@ -294,59 +307,53 @@ http://data.crossref.org/10.1126/science.169.3946.635
 <p>
   Currently two DOI registration agencies have implemented content negotation for their 
   DOIs: CrossRef and DataCite. They support a number of metadata content types, some of
-  which are common to both RAs:
+  which are common to both RAs.
 </p>
 <table  border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="table table-bordered table-striped">
 <caption></caption>
-<colgroup><col class="left" /><col class="left" />
+<colgroup><col class="left" /><col class="left" /><col class="left" /><col class="left" />
 </colgroup>
 <thead>
-<tr><th scope="col" class="left">Format</th><th scope="col" class="left">Content Type</th></tr>
+<tr><th scope="col" class="left">Format</th><th scope="col" class="left">Content Type</th><th scope="col" class="left">CrossRef</th><th scope="col" class="left">DataCite</th></tr>
 </thead>
 <tbody>
-<tr><td class="left">RDF XML</td><td class="left">application/rdf+xml</td></tr>
-<tr><td class="left">Turtle</td><td class="left">text/turtle</td></tr>
-<tr><td class="left">Handle Admin JSON</td><td class="left">application/handle+json</td></tr>
-<tr><td class="left">Citeproc JSON</td><td class="left">application/citeproc+json</td></tr>
+<tr><td class="left"><a href='http://www.w3.org/TR/rdf-syntax-grammar/'>RDF XML</a></td><td class="left">application/rdf+xml</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left"><a href='http://www.w3.org/TeamSubmission/turtle/'>RDF Turtle</a></td><td class="left">text/turtle</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left"><a href='http://gsl-nagoya-u.net/http/pub/citeproc-doc.html'>Citeproc JSON</a></td><td class="left">application/citeproc+json</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left"><a href='http://citationstyles.org/'>Formatted text citation</a></td><td class="left">text/bibliography</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left"><a href='http://schema.datacite.org/'>DataCite XML</a></td><td class="left">application/x-datacite+xml</td><td class="left"><span class='label label-important'>No</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left"><a href='http://www.crossref.org/schema/documentation/unixref1.1/unixref1.1.html'>CrossRef Unixref XML</a></td><td class="left">application/unixref+xml</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-important'>No</span></td></tr>
+<tr><td class="left">RDF JSON (JSON serialization of RDF XML)</td><td class="left">application/rdf+json</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-important'>No</span></td></tr>
+<tr><td class="left">JSONP (as above but wrapped in callback)</td><td class="left">application/javascript</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-important'>No</span></td></tr>
+<tr><td class="left"><a href='http://en.wikipedia.org/wiki/RIS<sub>(file<sub>format</sub>)</sub>'>RIS</a></td><td class="left">application/x-research-info-systems</td><td class="left"><span class='label label-important'>No</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left">Simple text citation</td><td class="left">application/x-datacite+text</td><td class="left"><span class='label label-important'>No</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
 </tbody>
 </table>
 
 
 <p>
-  Each RA also supports specific, non-standard content types. Using content
-  negotation it is possible to make a request that favours RA-specific content types
-  and will degrade to respond with a more standard content type if it is not
-  available. See the examples below.
+  Using content negotation it is possible to make a request that favours content types
+  specific to a particular registration agency but which will also  degrade to respond 
+  with a more standard content type for other registration agencies. For example:
+</p>
+
+
+
+<pre class="example">$ curl -LH "Accept: application/unixref+xml;q=1, application/rdf+xml;q=0.5" http://dx.doi.org/10.1126/science.169.3946.635
+</pre>
+
+
+<p>
+  This request will return CrossRef XML for CrossRef DOIs and RDF XML for non-CrossRef 
+  DOIs, such as DataCite DOIs.
 </p>
 </div>
 
 </div>
 
 <div id="outline-container-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> Determine a DOI's Registration Agency</h2>
+<h2 id="sec-5"><span class="section-number-2">5</span> CrossRef and DataCite</h2>
 <div class="outline-text-2" id="text-5">
-
-
-<p>
-  Each DOI has a handle record that is available through DOI content negotiation.
-  Handle records contain metadata about a DOI, including the name of registration
-  agencies that control DOIs. Handle records can be retreived via the text/handle
-  content type:
-</p>
-
-
-
-<pre class="example">$ curl -LH "Accept: application/handle+json" http://dx.doi.org/10.5555/test_doi
-</pre>
-
-
-</div>
-
-</div>
-
-<div id="outline-container-6" class="outline-2">
-<h2 id="sec-6"><span class="section-number-2">6</span> CrossRef and DataCite</h2>
-<div class="outline-text-2" id="text-6">
 
 
 <p>
@@ -365,13 +372,13 @@ http://data.crossref.org/10.1126/science.169.3946.635
 
 </div>
 
-<div id="outline-container-7" class="outline-2">
-<h2 id="sec-7"><span class="section-number-2">7</span> Getting Help</h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Getting Help</h2>
+<div class="outline-text-2" id="text-6">
 
 
 <p>
-  Please contact labs@crossref.org or cn@datacite.org for support.
+  Please contact labs@crossref.org or tech@datacite.org for support.
 </p>
 
 
@@ -380,12 +387,5 @@ http://data.crossref.org/10.1126/science.169.3946.635
 </div>
 </div>
 
-<div id="postamble">
-<p class="date">Date: 2012-03-13 10:31:53 GMT</p>
-<p class="author">Author: Karl Ward</p>
-<p class="creator">Org version 7.8.03 with Emacs version 24</p>
-<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
-
-</div>
 </body>
 </html>
