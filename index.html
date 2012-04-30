@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>DOI Content Negotiation</title>
-<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="DOI Content Negotiation"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-04-30 10:03:35 BST"/>
+<meta name="generated" content="2012-04-30 11:36:24 BST"/>
 <meta name="author" content="Karl Ward"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -112,7 +112,11 @@
 <li><a href="#sec-3-2">3.2 Response Codes</a></li>
 </ul>
 </li>
-<li><a href="#sec-4">4 Supported Content Types</a></li>
+<li><a href="#sec-4">4 Supported Content Types</a>
+<ul>
+<li><a href="#sec-4-1">4.1 Formatted Citations</a></li>
+</ul>
+</li>
 <li><a href="#sec-5">5 CrossRef and DataCite</a></li>
 <li><a href="#sec-6">6 Getting Help</a></li>
 </ul>
@@ -347,6 +351,52 @@ http://data.crossref.org/10.1126/science.169.3946.635
   This request will return CrossRef XML for CrossRef DOIs and RDF XML for non-CrossRef 
   DOIs, such as DataCite DOIs.
 </p>
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Formatted Citations</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+<p>
+   Both CrossRef and DataCite support formatted citations via the text/bibliography
+   content type. These are the output of the 
+   <a href='http://citationstyles.org/'>Citation Style Language</a> processor, 
+   citeproc-js. The content type can take two additional parameters to customise its
+   response format. A "style" can be chosen from the list of style names found in
+   the <a href='https://github.com/citation-style-language/styles'>CSL style 
+   repository</a>. Many styles are supported, including common styles such as apa and
+   harvard3:
+</p>
+
+
+
+<pre class="example">$ curl -LH "Accept: text/bibliography; style=apa" http://dx.doi.org/10.1126/science.169.3946.635
+
+Frank, H. S. (1970). The Structure of Ordinary Water: New data and interpretations are yielding 
+  new insights into this fascinating substance. Science, 169(3946), 635-641. American Association 
+  for the Advancement of Science AAAS (Science). doi:10.1126/science.169.3946.635
+</pre>
+
+
+<p>
+   A locale can also be specified. Use one of the locale names from the
+   <a href='https://github.com/citation-style-language/locales'>CSL locales 
+   repository</a>:
+</p>
+
+
+
+<pre class="example">$ curl -LH "Accept: text/bibliography; style=harvard3; locale=fr-FR" http://dx.doi.org/10.1126/science.169.3946.635
+
+Frank, HS 1970, « The Structure of Ordinary Water: New data and interpretations are yielding new 
+  insights into this fascinating substance ». Science, vol. 169, no. 3946, p. 635-641. Consulté 
+  de http://dx.doi.org/10.1126/science.169.3946.635
+</pre>
+
+
+</div>
 </div>
 
 </div>

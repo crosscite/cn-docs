@@ -148,6 +148,37 @@
   This request will return CrossRef XML for CrossRef DOIs and RDF XML for non-CrossRef 
   DOIs, such as DataCite DOIs.
 
+** Formatted Citations
+
+   Both CrossRef and DataCite support formatted citations via the text/bibliography
+   content type. These are the output of the 
+   @<a href='http://citationstyles.org/'>Citation Style Language@</a> processor, 
+   citeproc-js. The content type can take two additional parameters to customise its
+   response format. A "style" can be chosen from the list of style names found in
+   the @<a href='https://github.com/citation-style-language/styles'>CSL style 
+   repository@</a>. Many styles are supported, including common styles such as apa and
+   harvard3:
+
+   #+BEGIN_EXAMPLE
+   $ curl -LH "Accept: text/bibliography; style=apa" http://dx.doi.org/10.1126/science.169.3946.635
+   
+   Frank, H. S. (1970). The Structure of Ordinary Water: New data and interpretations are yielding 
+     new insights into this fascinating substance. Science, 169(3946), 635-641. American Association 
+     for the Advancement of Science AAAS (Science). doi:10.1126/science.169.3946.635
+   #+END_EXAMPLE
+
+   A locale can also be specified. Use one of the locale names from the
+   @<a href='https://github.com/citation-style-language/locales'>CSL locales 
+   repository@</a>:
+
+   #+BEGIN_EXAMPLE
+   $ curl -LH "Accept: text/bibliography; style=harvard3; locale=fr-FR" http://dx.doi.org/10.1126/science.169.3946.635
+
+   Frank, HS 1970, « The Structure of Ordinary Water: New data and interpretations are yielding new 
+     insights into this fascinating substance ». Science, vol. 169, no. 3946, p. 635-641. Consulté 
+     de http://dx.doi.org/10.1126/science.169.3946.635
+   #+END_EXAMPLE
+
 * CrossRef and DataCite
 
   CrossRef and DataCite implement additional content types and features. For
