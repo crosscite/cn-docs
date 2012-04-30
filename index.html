@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="DOI Content Negotiation"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-04-30 11:36:24 BST"/>
+<meta name="generated" content="2012-04-30 11:47:12 BST"/>
 <meta name="author" content="Karl Ward"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -248,6 +248,22 @@ http://data.crossref.org/10.1126/science.169.3946.635
 
 
 <pre class="example">$ curl -LH "Accept: application/rdf+xml;q=0.5, application/citeproc+json;q=1.0" http://dx.doi.org/10.1126/science.169.3946.635
+
+{
+  "volume" : "169",
+  "issue" : "3946",
+  "DOI" : "10.1126/science.169.3946.635",
+  "URL" : "http://dx.doi.org/10.1126/science.169.3946.635",
+  "title" : "The Structure of Ordinary Water: New data and interpretations are 
+           yielding new insights into this fascinating substance",
+  "container-title" : "Science",
+  "publisher" : "American Association for the Advancement of Science AAAS (Science)",
+  "issued" : { "date-parts" : [ [ 1970,8,14 ] ] },
+  "author" : [ { "family" : "Frank", "given" : "H. S."} ],
+  "editor" : [],
+  "page" : "635-641",
+  "type" : "article-journal"
+}
 </pre>
 
 
@@ -436,6 +452,5 @@ Frank, HS 1970, « The Structure of Ordinary Water: New data and interpretation
 </div>
 </div>
 </div>
-
 </body>
 </html>

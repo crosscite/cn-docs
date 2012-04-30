@@ -89,6 +89,22 @@
 
    #+BEGIN_EXAMPLE
    $ curl -LH "Accept: application/rdf+xml;q=0.5, application/citeproc+json;q=1.0" http://dx.doi.org/10.1126/science.169.3946.635
+
+   {
+     "volume" : "169",
+     "issue" : "3946",
+     "DOI" : "10.1126/science.169.3946.635",
+     "URL" : "http://dx.doi.org/10.1126/science.169.3946.635",
+     "title" : "The Structure of Ordinary Water: New data and interpretations are 
+              yielding new insights into this fascinating substance",
+     "container-title" : "Science",
+     "publisher" : "American Association for the Advancement of Science AAAS (Science)",
+     "issued" : { "date-parts" : [ [ 1970,8,14 ] ] },
+     "author" : [ { "family" : "Frank", "given" : "H. S."} ],
+     "editor" : [],
+     "page" : "635-641",
+     "type" : "article-journal"
+   }
    #+END_EXAMPLE
 
    This request favours citeproc JSON but will accept RDF XML if citeproc is unavailable.
