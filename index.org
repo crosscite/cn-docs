@@ -79,60 +79,60 @@
 
 ** The Accept Header
 
-   Making a content negotiated request requires the use of a HTTP header, "Accept".
-   Content types that are acceptable to the client (those that it knows how to parse), 
-   each with an optional "quality" value indicating its relative suitability. For example, 
-   a client that
-   wishes to receive citeproc JSON if it is available, but which can also handle
-   RDF XML if citeproc JSON is unavailable, would make a request with an Accept
-   header listing both "application/citeproc+json" and "application/rdf+xml":
+  Making a content negotiated request requires the use of a HTTP header, "Accept".
+  Content types that are acceptable to the client (those that it knows how to parse), 
+  each with an optional "quality" value indicating its relative suitability. For example, 
+  a client that
+  wishes to receive citeproc JSON if it is available, but which can also handle
+  RDF XML if citeproc JSON is unavailable, would make a request with an Accept
+  header listing both "application/citeproc+json" and "application/rdf+xml":
 
-   #+BEGIN_EXAMPLE
-   $ curl -LH "Accept: application/rdf+xml;q=0.5, application/citeproc+json;q=1.0" http://dx.doi.org/10.1126/science.169.3946.635
+  #+BEGIN_EXAMPLE
+  $ curl -LH "Accept: application/rdf+xml;q=0.5, application/citeproc+json;q=1.0" http://dx.doi.org/10.1126/science.169.3946.635
 
-   {
-     "volume" : "169",
-     "issue" : "3946",
-     "DOI" : "10.1126/science.169.3946.635",
-     "URL" : "http://dx.doi.org/10.1126/science.169.3946.635",
-     "title" : "The Structure of Ordinary Water: New data and interpretations are 
-              yielding new insights into this fascinating substance",
-     "container-title" : "Science",
-     "publisher" : "American Association for the Advancement of Science AAAS (Science)",
-     "issued" : { "date-parts" : [ [ 1970,8,14 ] ] },
-     "author" : [ { "family" : "Frank", "given" : "H. S."} ],
-     "editor" : [],
-     "page" : "635-641",
-     "type" : "article-journal"
-   }
-   #+END_EXAMPLE
+  {
+    "volume" : "169",
+    "issue" : "3946",
+    "DOI" : "10.1126/science.169.3946.635",
+    "URL" : "http://dx.doi.org/10.1126/science.169.3946.635",
+    "title" : "The Structure of Ordinary Water: New data and interpretations are 
+             yielding new insights into this fascinating substance",
+    "container-title" : "Science",
+    "publisher" : "American Association for the Advancement of Science AAAS (Science)",
+    "issued" : { "date-parts" : [ [ 1970,8,14 ] ] },
+    "author" : [ { "family" : "Frank", "given" : "H. S."} ],
+    "editor" : [],
+    "page" : "635-641",
+    "type" : "article-journal"
+  }
+  #+END_EXAMPLE
 
-   This request favours citeproc JSON but will accept RDF XML if citeproc is unavailable.
-   The q values are optional. The request could have been written without them. The
-   order of content types then becomes important; more suitable content types should
-   be placed at the front of the Accept header.
+  This request favours citeproc JSON but will accept RDF XML if citeproc is unavailable.
+  The q values are optional. The request could have been written without them. The
+  order of content types then becomes important; more suitable content types should
+  be placed at the front of the Accept header.
 
-   #+BEGIN_EXAMPLE
-   $ curl -LH "Accept: application/citeproc+json, application/rdf+xml" http://dx.doi.org/10.1126/science.169.3946.635
-   #+END_EXAMPLE
+  #+BEGIN_EXAMPLE
+  $ curl -LH "Accept: application/citeproc+json, application/rdf+xml" http://dx.doi.org/10.1126/science.169.3946.635
+  #+END_EXAMPLE
 
 ** Response Codes
 
-   #+ATTR_HTML: class="table table-bordered table-striped"
-   | Code | Meaning                                                    |
-   |------+------------------------------------------------------------|
-   |  200 | The request was OK.                                        |
-   |  400 | Malformed DOI specified (DOI prefix or suffix not present) |
-   |  404 | The DOI requested doesn't exist.                           |
-   |  406 | Can't serve any requested content type.                    |
+  #+ATTR_HTML: class="table table-bordered table-striped"
+  | Code | Meaning                                                    |
+  |------+------------------------------------------------------------|
+  |  200 | The request was OK.                                        |
+  |  204 | The request was OK but there was no metadata available.    |
+  |  404 | The DOI requested doesn't exist.                           |
+  |  406 | Can't serve any requested content type.                    |
 
-   Individual RA metadata services may utilise additional response codes but they will
-   always use the response codes above in event of the case described.
+  Individual RA metadata services may utilise additional response codes but they will
+  always use the response codes above in event of the case described.
 
-   If multiple content types specified by the client are supported by a DOI then the
-   content type with the highest "q" value (or, if no "q" values are specified, the one
-   that appears first in the "accept" header) will be returned.
-   
+  If multiple content types specified by the client are supported by a DOI then the
+  content type with the highest "q" value (or, if no "q" values are specified, the one
+  that appears first in the "accept" header) will be returned.
+  
 * Supported Content Types
 
   Currently two DOI registration agencies have implemented content negotation for their 
@@ -144,14 +144,15 @@
   |--------------------------------------------------------------------------------------------------------------+-------------------------------------+-------------------------------------------------+-------------------------------------------------|
   | @<a href='http://www.w3.org/TR/rdf-syntax-grammar/'>RDF XML@</a>                                             | application/rdf+xml                 | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
   | @<a href='http://www.w3.org/TeamSubmission/turtle/'>RDF Turtle@</a>                                          | text/turtle                         | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
-  | @<a href='http://gsl-nagoya-u.net/http/pub/citeproc-doc.html'>Citeproc JSON@</a>                             | application/citeproc+json           | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
-  | @<a href='http://citationstyles.org/'>Formatted text citation@</a>                                           | text/bibliography                   | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
-  | @<a href='http://schema.datacite.org/'>DataCite XML@</a>                                                     | application/x-datacite+xml          | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  |
-  | @<a href='http://www.crossref.org/schema/documentation/unixref1.1/unixref1.1.html'>CrossRef Unixref XML@</a> | application/unixref+xml             | @<span class='label label-success'>Yes@</span>  | @<span class='label label-important'>No@</span> |
+  | @<a href='http://gsl-nagoya-u.net/http/pub/citeproc-doc.html'>Citeproc JSON@</a>                             | application/vnd.citationstyles.csl+json                        | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
+  | @<a href='http://citationstyles.org/'>Formatted text citation@</a>                                           | text/x-bibliography                 | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
+  | @<a href='http://en.wikipedia.org/wiki/RIS\_(file\_format)'>RIS@</a>                                         | application/x-research-info-systems | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  |
+  | @<a href='http://en.wikipedia.org/wiki/BibTeX'>BibTeX@</a>                                                   | application/x-bibtex                | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  |
+  | @<a href='http://www.crossref.org/schema/documentation/unixref1.1/unixref1.1.html'>CrossRef Unixref XML@</a> | application/vnd.crossref.unixref+xml             | @<span class='label label-success'>Yes@</span>  | @<span class='label label-important'>No@</span> |
   | RDF JSON (JSON serialization of RDF XML)                                                                     | application/rdf+json                | @<span class='label label-success'>Yes@</span>  | @<span class='label label-important'>No@</span> |
   | JSONP (as above but wrapped in callback)                                                                     | application/javascript              | @<span class='label label-success'>Yes@</span>  | @<span class='label label-important'>No@</span> |
-  | @<a href='http://en.wikipedia.org/wiki/RIS_(file_format)'>RIS@</a>                                           | application/x-research-info-systems | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  |
-  | Simple text citation                                                                                         | application/x-datacite+text         | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  |
+  | @<a href='http://schema.datacite.org/'>DataCite XML@</a>                                                     | application/vnd.datacite.datacite+xml           | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  |
+  | Simple text citation                                                                                         | application/vnd.datacite.datacite+text           | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  |
 
   Using content negotation it is possible to make a request that favours content types
   specific to a particular registration agency but which will also  degrade to respond 
@@ -166,34 +167,34 @@
 
 ** Formatted Citations
 
-   Both CrossRef and DataCite support formatted citations via the text/bibliography
-   content type. These are the output of the 
-   @<a href='http://citationstyles.org/'>Citation Style Language@</a> processor, 
-   citeproc-js. The content type can take two additional parameters to customise its
-   response format. A "style" can be chosen from the list of style names found in
-   the @<a href='https://github.com/citation-style-language/styles'>CSL style 
-   repository@</a>. Many styles are supported, including common styles such as apa and
-   harvard3:
+  Both CrossRef and DataCite support formatted citations via the text/bibliography
+  content type. These are the output of the 
+  @<a href='http://citationstyles.org/'>Citation Style Language@</a> processor, 
+  citeproc-js. The content type can take two additional parameters to customise its
+  response format. A "style" can be chosen from the list of style names found in
+  the @<a href='https://github.com/citation-style-language/styles'>CSL style 
+  repository@</a>. Many styles are supported, including common styles such as apa and
+  harvard3:
 
-   #+BEGIN_EXAMPLE
-   $ curl -LH "Accept: text/bibliography; style=apa" http://dx.doi.org/10.1126/science.169.3946.635
-   
-   Frank, H. S. (1970). The Structure of Ordinary Water: New data and interpretations are yielding 
-     new insights into this fascinating substance. Science, 169(3946), 635-641. American Association 
-     for the Advancement of Science AAAS (Science). doi:10.1126/science.169.3946.635
-   #+END_EXAMPLE
+  #+BEGIN_EXAMPLE
+  $ curl -LH "Accept: text/bibliography; style=apa" http://dx.doi.org/10.1126/science.169.3946.635
+  
+  Frank, H. S. (1970). The Structure of Ordinary Water: New data and interpretations are yielding 
+    new insights into this fascinating substance. Science, 169(3946), 635-641. American Association 
+    for the Advancement of Science AAAS (Science). doi:10.1126/science.169.3946.635
+  #+END_EXAMPLE
 
-   A locale can also be specified. Use one of the locale names from the
-   @<a href='https://github.com/citation-style-language/locales'>CSL locales 
-   repository@</a>:
+  A locale can also be specified. Use one of the locale names from the
+  @<a href='https://github.com/citation-style-language/locales'>CSL locales 
+  repository@</a>:
 
-   #+BEGIN_EXAMPLE
-   $ curl -LH "Accept: text/bibliography; style=harvard3; locale=fr-FR" http://dx.doi.org/10.1126/science.169.3946.635
+  #+BEGIN_EXAMPLE
+  $ curl -LH "Accept: text/bibliography; style=harvard3; locale=fr-FR" http://dx.doi.org/10.1126/science.169.3946.635
 
-   Frank, HS 1970, « The Structure of Ordinary Water: New data and interpretations are yielding new 
-     insights into this fascinating substance ». Science, vol. 169, no. 3946, p. 635-641. Consulté 
-     de http://dx.doi.org/10.1126/science.169.3946.635
-   #+END_EXAMPLE
+  Frank, HS 1970, « The Structure of Ordinary Water: New data and interpretations are yielding new 
+    insights into this fascinating substance ». Science, vol. 169, no. 3946, p. 635-641. Consulté 
+    de http://dx.doi.org/10.1126/science.169.3946.635
+  #+END_EXAMPLE
 
 * CrossRef and DataCite
 
