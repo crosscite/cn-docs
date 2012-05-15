@@ -149,10 +149,7 @@
   | @<a href='http://en.wikipedia.org/wiki/RIS\_(file\_format)'>RIS@</a>                                         | application/x-research-info-systems | @<span class='label label-success'>Yes@</span>   | @<span class='label label-success'>Yes@</span>  |
   | @<a href='http://en.wikipedia.org/wiki/BibTeX'>BibTeX@</a>                                                   | application/x-bibtex                | @<span class='label label-success'>Yes@</span> | @<span class='label label-success'>Yes@</span>  |
   | @<a href='http://www.crossref.org/schema/documentation/unixref1.1/unixref1.1.html'>CrossRef Unixref XML@</a> | application/vnd.crossref.unixref+xml             | @<span class='label label-success'>Yes@</span>  | @<span class='label label-important'>No@</span> |
-  | RDF JSON (JSON serialization of RDF XML)                                                                     | application/rdf+json                | @<span class='label label-success'>Yes@</span>  | @<span class='label label-important'>No@</span> |
-  | JSONP (as above but wrapped in callback)                                                                     | application/javascript              | @<span class='label label-success'>Yes@</span>  | @<span class='label label-important'>No@</span> |
   | @<a href='http://schema.datacite.org/'>DataCite XML@</a>                                                     | application/vnd.datacite.datacite+xml           | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  |
-  | Simple text citation                                                                                         | application/vnd.datacite.datacite+text           | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  |
 
   Using content negotation it is possible to make a request that favours content types
   specific to a particular registration agency but which will also  degrade to respond 
