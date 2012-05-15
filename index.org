@@ -66,7 +66,7 @@
   #+HTML: </div></div>
 
   Requests for a data type redirect to a registration agency's metadata service.
-
+  
 * What is Content Negotiation?
 
   Content negotiation allows a user to request a particular representation of a web 
@@ -88,7 +88,7 @@
    header listing both "application/citeproc+json" and "application/rdf+xml":
 
    #+BEGIN_EXAMPLE
-   $ curl -LH "Accept: application/rdf+xml;q=0.5, application/citeproc+json;q=1.0" http://dx.doi.org/10.1126/science.169.3946.635
+   $ curl -LH "Accept: application/rdf+xml;q=0.5, application/vnd.citationstyles.csl+json;q=1.0" http://dx.doi.org/10.1126/science.169.3946.635
 
    {
      "volume" : "169",
@@ -113,7 +113,7 @@
    be placed at the front of the Accept header.
 
    #+BEGIN_EXAMPLE
-   $ curl -LH "Accept: application/citeproc+json, application/rdf+xml" http://dx.doi.org/10.1126/science.169.3946.635
+   $ curl -LH "Accept: application/vnd.citationstyles.csl+json, application/rdf+xml" http://dx.doi.org/10.1126/science.169.3946.635
    #+END_EXAMPLE
 
 ** Response Codes
@@ -158,7 +158,7 @@
   with a more standard content type for other registration agencies. For example:
 
   #+BEGIN_EXAMPLE
-  $ curl -LH "Accept: application/unixref+xml;q=1, application/rdf+xml;q=0.5" http://dx.doi.org/10.1126/science.169.3946.635
+  $ curl -LH "Accept: application/vnd.crossref.unixref+xml;q=1, application/rdf+xml;q=0.5" http://dx.doi.org/10.1126/science.169.3946.635
   #+END_EXAMPLE
 
   This request will return CrossRef XML for CrossRef DOIs and RDF XML for non-CrossRef 
@@ -171,37 +171,39 @@
    @<a href='http://citationstyles.org/'>Citation Style Language@</a> processor, 
    citeproc-js. The content type can take two additional parameters to customise its
    response format. A "style" can be chosen from the list of style names found in
-   the @<a href='https://github.com/citation-style-language/styles'>CSL style 
+   the @<a href='https://github.com/citation-style-language/styles'>CSL styles 
    repository@</a>. Many styles are supported, including common styles such as apa and
    harvard3:
 
    #+BEGIN_EXAMPLE
-   $ curl -LH "Accept: text/bibliography; style=apa" http://dx.doi.org/10.1126/science.169.3946.635
+   $ curl -LH "Accept: text/x-bibliography; style=apa" http://dx.doi.org/10.1126/science.169.3946.635
    
    Frank, H. S. (1970). The Structure of Ordinary Water: New data and interpretations are yielding 
      new insights into this fascinating substance. Science, 169(3946), 635-641. American Association 
      for the Advancement of Science AAAS (Science). doi:10.1126/science.169.3946.635
    #+END_EXAMPLE
 
-   A locale can also be specified. Use one of the locale names from the
+   A locale can also be specified. Use a locale name from the
    @<a href='https://github.com/citation-style-language/locales'>CSL locales 
    repository@</a>:
 
    #+BEGIN_EXAMPLE
-   $ curl -LH "Accept: text/bibliography; style=harvard3; locale=fr-FR" http://dx.doi.org/10.1126/science.169.3946.635
+   $ curl -LH "Accept: text/x-bibliography; style=harvard3; locale=fr-FR" http://dx.doi.org/10.1126/science.169.3946.635
 
    Frank, HS 1970, « The Structure of Ordinary Water: New data and interpretations are yielding new 
      insights into this fascinating substance ». Science, vol. 169, no. 3946, p. 635-641. Consulté 
      de http://dx.doi.org/10.1126/science.169.3946.635
    #+END_EXAMPLE
 
-* CrossRef and DataCite
+* DataCite Link-based Content Type Requests
 
-  CrossRef and DataCite implement additional content types and features. For
-  documentation see:
+  DataCite supports link-based content type requests, for example:
 
-  - http://data.datacite.org
-  - http://data.crossref.org
+  #+BEGIN_EXAMPLE
+  $ curl http://data.datacite.org/application/x-datacite+text/10.5524/100005
+  #+END_EXAMPLE
+
+  For documentation see http://data.datacite.org.
 
 * Getting Help
 
