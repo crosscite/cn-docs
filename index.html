@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="title" content="DOI Content Negotiation"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-04-30 11:47:12 BST"/>
+<meta name="generated" content="2012-05-15 10:44:48 BST"/>
 <meta name="author" content="Karl Ward"/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -117,7 +117,7 @@
 <li><a href="#sec-4-1">4.1 Formatted Citations</a></li>
 </ul>
 </li>
-<li><a href="#sec-5">5 CrossRef and DataCite</a></li>
+<li><a href="#sec-5">5 DataCite Link-based Content Type Requests</a></li>
 <li><a href="#sec-6">6 Getting Help</a></li>
 </ul>
 </div>
@@ -236,18 +236,18 @@ http://data.crossref.org/10.1126/science.169.3946.635
 
 
 <p>
-   Making a content negotiated request requires the use of a HTTP header, "Accept".
-   Content types that are acceptable to the client (those that it knows how to parse), 
-   each with an optional "quality" value indicating its relative suitability. For example, 
-   a client that
-   wishes to receive citeproc JSON if it is available, but which can also handle
-   RDF XML if citeproc JSON is unavailable, would make a request with an Accept
-   header listing both "application/citeproc+json" and "application/rdf+xml":
+  Making a content negotiated request requires the use of a HTTP header, "Accept".
+  Content types that are acceptable to the client (those that it knows how to parse), 
+  each with an optional "quality" value indicating its relative suitability. For example, 
+  a client that
+  wishes to receive citeproc JSON if it is available, but which can also handle
+  RDF XML if citeproc JSON is unavailable, would make a request with an Accept
+  header listing both "application/citeproc+json" and "application/rdf+xml":
 </p>
 
 
 
-<pre class="example">$ curl -LH "Accept: application/rdf+xml;q=0.5, application/citeproc+json;q=1.0" http://dx.doi.org/10.1126/science.169.3946.635
+<pre class="example">$ curl -LH "Accept: application/rdf+xml;q=0.5, application/vnd.citationstyles.csl+json;q=1.0" http://dx.doi.org/10.1126/science.169.3946.635
 
 {
   "volume" : "169",
@@ -268,15 +268,15 @@ http://data.crossref.org/10.1126/science.169.3946.635
 
 
 <p>
-   This request favours citeproc JSON but will accept RDF XML if citeproc is unavailable.
-   The q values are optional. The request could have been written without them. The
-   order of content types then becomes important; more suitable content types should
-   be placed at the front of the Accept header.
+  This request favours citeproc JSON but will accept RDF XML if citeproc is unavailable.
+  The q values are optional. The request could have been written without them. The
+  order of content types then becomes important; more suitable content types should
+  be placed at the front of the Accept header.
 </p>
 
 
 
-<pre class="example">$ curl -LH "Accept: application/citeproc+json, application/rdf+xml" http://dx.doi.org/10.1126/science.169.3946.635
+<pre class="example">$ curl -LH "Accept: application/vnd.citationstyles.csl+json, application/rdf+xml" http://dx.doi.org/10.1126/science.169.3946.635
 </pre>
 
 
@@ -298,7 +298,7 @@ http://data.crossref.org/10.1126/science.169.3946.635
 </thead>
 <tbody>
 <tr><td class="right">200</td><td class="left">The request was OK.</td></tr>
-<tr><td class="right">400</td><td class="left">Malformed DOI specified (DOI prefix or suffix not present)</td></tr>
+<tr><td class="right">204</td><td class="left">The request was OK but there was no metadata available.</td></tr>
 <tr><td class="right">404</td><td class="left">The DOI requested doesn't exist.</td></tr>
 <tr><td class="right">406</td><td class="left">Can't serve any requested content type.</td></tr>
 </tbody>
@@ -306,13 +306,13 @@ http://data.crossref.org/10.1126/science.169.3946.635
 
 
 <p>
-   Individual RA metadata services may utilise additional response codes but they will
-   always use the response codes above in event of the case described.
+  Individual RA metadata services may utilise additional response codes but they will
+  always use the response codes above in event of the case described.
 </p>
 <p>
-   If multiple content types specified by the client are supported by a DOI then the
-   content type with the highest "q" value (or, if no "q" values are specified, the one
-   that appears first in the "accept" header) will be returned.
+  If multiple content types specified by the client are supported by a DOI then the
+  content type with the highest "q" value (or, if no "q" values are specified, the one
+  that appears first in the "accept" header) will be returned.
 </p>
 </div>
 </div>
@@ -339,14 +339,15 @@ http://data.crossref.org/10.1126/science.169.3946.635
 <tbody>
 <tr><td class="left"><a href='http://www.w3.org/TR/rdf-syntax-grammar/'>RDF XML</a></td><td class="left">application/rdf+xml</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
 <tr><td class="left"><a href='http://www.w3.org/TeamSubmission/turtle/'>RDF Turtle</a></td><td class="left">text/turtle</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
-<tr><td class="left"><a href='http://gsl-nagoya-u.net/http/pub/citeproc-doc.html'>Citeproc JSON</a></td><td class="left">application/citeproc+json</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
-<tr><td class="left"><a href='http://citationstyles.org/'>Formatted text citation</a></td><td class="left">text/bibliography</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
-<tr><td class="left"><a href='http://schema.datacite.org/'>DataCite XML</a></td><td class="left">application/x-datacite+xml</td><td class="left"><span class='label label-important'>No</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
-<tr><td class="left"><a href='http://www.crossref.org/schema/documentation/unixref1.1/unixref1.1.html'>CrossRef Unixref XML</a></td><td class="left">application/unixref+xml</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-important'>No</span></td></tr>
+<tr><td class="left"><a href='http://gsl-nagoya-u.net/http/pub/citeproc-doc.html'>Citeproc JSON</a></td><td class="left">application/vnd.citationstyles.csl+json</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left"><a href='http://citationstyles.org/'>Formatted text citation</a></td><td class="left">text/x-bibliography</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left"><a href='http://en.wikipedia.org/wiki/RIS_(file_format)'>RIS</a></td><td class="left">application/x-research-info-systems</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left"><a href='http://en.wikipedia.org/wiki/BibTeX'>BibTeX</a></td><td class="left">application/x-bibtex</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left"><a href='http://www.crossref.org/schema/documentation/unixref1.1/unixref1.1.html'>CrossRef Unixref XML</a></td><td class="left">application/vnd.crossref.unixref+xml</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-important'>No</span></td></tr>
 <tr><td class="left">RDF JSON (JSON serialization of RDF XML)</td><td class="left">application/rdf+json</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-important'>No</span></td></tr>
 <tr><td class="left">JSONP (as above but wrapped in callback)</td><td class="left">application/javascript</td><td class="left"><span class='label label-success'>Yes</span></td><td class="left"><span class='label label-important'>No</span></td></tr>
-<tr><td class="left"><a href='http://en.wikipedia.org/wiki/RIS<sub>(file<sub>format</sub>)</sub>'>RIS</a></td><td class="left">application/x-research-info-systems</td><td class="left"><span class='label label-important'>No</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
-<tr><td class="left">Simple text citation</td><td class="left">application/x-datacite+text</td><td class="left"><span class='label label-important'>No</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left"><a href='http://schema.datacite.org/'>DataCite XML</a></td><td class="left">application/vnd.datacite.datacite+xml</td><td class="left"><span class='label label-important'>No</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
+<tr><td class="left">Simple text citation</td><td class="left">application/vnd.datacite.datacite+text</td><td class="left"><span class='label label-important'>No</span></td><td class="left"><span class='label label-success'>Yes</span></td></tr>
 </tbody>
 </table>
 
@@ -359,7 +360,7 @@ http://data.crossref.org/10.1126/science.169.3946.635
 
 
 
-<pre class="example">$ curl -LH "Accept: application/unixref+xml;q=1, application/rdf+xml;q=0.5" http://dx.doi.org/10.1126/science.169.3946.635
+<pre class="example">$ curl -LH "Accept: application/vnd.crossref.unixref+xml;q=1, application/rdf+xml;q=0.5" http://dx.doi.org/10.1126/science.169.3946.635
 </pre>
 
 
@@ -376,19 +377,19 @@ http://data.crossref.org/10.1126/science.169.3946.635
 
 
 <p>
-   Both CrossRef and DataCite support formatted citations via the text/bibliography
-   content type. These are the output of the 
-   <a href='http://citationstyles.org/'>Citation Style Language</a> processor, 
-   citeproc-js. The content type can take two additional parameters to customise its
-   response format. A "style" can be chosen from the list of style names found in
-   the <a href='https://github.com/citation-style-language/styles'>CSL style 
-   repository</a>. Many styles are supported, including common styles such as apa and
-   harvard3:
+  Both CrossRef and DataCite support formatted citations via the text/bibliography
+  content type. These are the output of the 
+  <a href='http://citationstyles.org/'>Citation Style Language</a> processor, 
+  citeproc-js. The content type can take two additional parameters to customise its
+  response format. A "style" can be chosen from the list of style names found in
+  the <a href='https://github.com/citation-style-language/styles'>CSL style 
+  repository</a>. Many styles are supported, including common styles such as apa and
+  harvard3:
 </p>
 
 
 
-<pre class="example">$ curl -LH "Accept: text/bibliography; style=apa" http://dx.doi.org/10.1126/science.169.3946.635
+<pre class="example">$ curl -LH "Accept: text/x-bibliography; style=apa" http://dx.doi.org/10.1126/science.169.3946.635
 
 Frank, H. S. (1970). The Structure of Ordinary Water: New data and interpretations are yielding 
   new insights into this fascinating substance. Science, 169(3946), 635-641. American Association 
@@ -397,14 +398,14 @@ Frank, H. S. (1970). The Structure of Ordinary Water: New data and interpretatio
 
 
 <p>
-   A locale can also be specified. Use one of the locale names from the
-   <a href='https://github.com/citation-style-language/locales'>CSL locales 
-   repository</a>:
+  A locale can also be specified. Use one of the locale names from the
+  <a href='https://github.com/citation-style-language/locales'>CSL locales 
+  repository</a>:
 </p>
 
 
 
-<pre class="example">$ curl -LH "Accept: text/bibliography; style=harvard3; locale=fr-FR" http://dx.doi.org/10.1126/science.169.3946.635
+<pre class="example">$ curl -LH "Accept: text/x-bibliography; style=harvard3; locale=fr-FR" http://dx.doi.org/10.1126/science.169.3946.635
 
 Frank, HS 1970, « The Structure of Ordinary Water: New data and interpretations are yielding new 
   insights into this fascinating substance ». Science, vol. 169, no. 3946, p. 635-641. Consulté 
@@ -418,22 +419,23 @@ Frank, HS 1970, « The Structure of Ordinary Water: New data and interpretation
 </div>
 
 <div id="outline-container-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> CrossRef and DataCite</h2>
+<h2 id="sec-5"><span class="section-number-2">5</span> DataCite Link-based Content Type Requests</h2>
 <div class="outline-text-2" id="text-5">
 
 
 <p>
-  CrossRef and DataCite implement additional content types and features. For
-  documentation see:
+  DataCite supports link-based content type requests, for example:
 </p>
-<ul>
-<li><a href="http://data.datacite.org">http://data.datacite.org</a>
-</li>
-<li><a href="http://data.crossref.org">http://data.crossref.org</a>
-</li>
-</ul>
 
 
+
+<pre class="example">$ curl http://data.datacite.org/application/x-datacite+text/10.5524/100005
+</pre>
+
+
+<p>
+  For documentation see <a href="http://data.datacite.org">http://data.datacite.org</a>.
+</p>
 </div>
 
 </div>
@@ -451,6 +453,14 @@ Frank, HS 1970, « The Structure of Ordinary Water: New data and interpretation
 </div>
 </div>
 </div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-05-15 10:44:48 BST</p>
+<p class="author">Author: Karl Ward</p>
+<p class="creator">Org version 7.8.03 with Emacs version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
 </div>
 </body>
 </html>
