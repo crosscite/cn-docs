@@ -14,23 +14,23 @@
   since they may follow links with embedded DOIs.
 
   Yet DOIs can provide more than a permanent, indirect link to content. DOI 
-  registration agencies such as CrossRef and DataCite collect bibliographic metadata 
+  registration agencies such as CrossRef, DataCite and mEDRA collect bibliographic metadata 
   about the works they link to. This metadata can be retrieved from a DOI resolver
-  too, using content negotation to request a particular representation of the metadata.
+  too, using content negotiation to request a particular representation of the metadata.
 
-  For some DOIs content negotiation can be used to retreive different representations
+  For some DOIs content negotiation can be used to retrieve different representations
   of a work. For example, some DataCite DOIs identify data sets that may be available
   in a number of data formats and container formats.
 
 * Redirection
 
-  The DOI resolver at dx.doi.org will normally redirect a user to the resource
+  The DOI resolver at doi.org will normally redirect a user to the resource
   location of a DOI. For example, the DOI "10.1126/science.169.3946.635"
   redirects to a landing page describing the article, "The Structure of Ordinary Water".
   Content negotiated requests to dx.doi.org that ask for a content type which isn't
   "text/html" will be redirected to a metadata service hosted by the DOI's registration
-  agency. CrossRef and DataCite support content negotiated DOIs via http://data.crossref.org 
-  and http://data.datacite.org.
+  agency. CrossRef, DataCite and mEDRA support content negotiated DOIs via http://data.crossref.org,
+  http://data.datacite.org and http://data.medra.org respectively.
 
   #+HTML: <div class="row"><div class="span6 offset3">
   #+BEGIN_EXAMPLE
@@ -70,7 +70,7 @@
 * What is Content Negotiation?
 
   Content negotiation allows a user to request a particular representation of a web 
-  resource. DOI resolvers uses content negotation to provide different representations 
+  resource. DOI resolvers use content negotiation to provide different representations 
   of metadata associated with DOIs.
 
   A content negotiated request to a DOI resolver is much like a standard HTTP request,
@@ -135,23 +135,24 @@
   
 * Supported Content Types
 
-  Currently two DOI registration agencies have implemented content negotation for their 
-  DOIs: CrossRef and DataCite. They support a number of metadata content types, some of
-  which are common to both RAs.
+  Currently three DOI registration agencies have implemented content negotation for their 
+  DOIs: CrossRef, DataCite and mEDRA. They support a number of metadata content types, some of
+  which are common to the three RAs.
 
   #+ATTR_HTML: class="table table-bordered table-striped"
-  | Format                                                                                                       | Content Type                        | CrossRef                                        | DataCite                                        |
-  |--------------------------------------------------------------------------------------------------------------+-------------------------------------+-------------------------------------------------+-------------------------------------------------|
-  | @<a href='http://www.w3.org/TR/rdf-syntax-grammar/'>RDF XML@</a>                                             | application/rdf+xml                 | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
-  | @<a href='http://www.w3.org/TeamSubmission/turtle/'>RDF Turtle@</a>                                          | text/turtle                         | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
-  | @<a href='http://gsl-nagoya-u.net/http/pub/citeproc-doc.html'>Citeproc JSON@</a>                             | application/vnd.citationstyles.csl+json                        | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
-  | @<a href='http://citationstyles.org/'>Formatted text citation@</a>                                           | text/x-bibliography                 | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
-  | @<a href='http://en.wikipedia.org/wiki/RIS\_(file\_format)'>RIS@</a>                                         | application/x-research-info-systems | @<span class='label label-success'>Yes@</span>   | @<span class='label label-success'>Yes@</span>  |
-  | @<a href='http://en.wikipedia.org/wiki/BibTeX'>BibTeX@</a>                                                   | application/x-bibtex                | @<span class='label label-success'>Yes@</span> | @<span class='label label-success'>Yes@</span>  |
-  | @<a href='http://www.crossref.org/schema/documentation/unixref1.1/unixref1.1.html'>CrossRef Unixref XML@</a> | application/vnd.crossref.unixref+xml             | @<span class='label label-success'>Yes@</span>  | @<span class='label label-important'>No@</span> |
-  | @<a href='http://schema.datacite.org/'>DataCite XML@</a>                                                     | application/vnd.datacite.datacite+xml           | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  |
+  | Format                                                                                                       | Content Type                            | CrossRef                                        | DataCite                                        | mEDRA                                           |
+  |--------------------------------------------------------------------------------------------------------------+-----------------------------------------+-------------------------------------------------+-------------------------------------------------+-------------------------------------------------|
+  | @<a href='http://www.w3.org/TR/rdf-syntax-grammar/'>RDF XML@</a>                                             | application/rdf+xml                     | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
+  | @<a href='http://www.w3.org/TeamSubmission/turtle/'>RDF Turtle@</a>                                          | text/turtle                             | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
+  | @<a href='http://gsl-nagoya-u.net/http/pub/citeproc-doc.html'>Citeproc JSON@</a>                             | application/vnd.citationstyles.csl+json | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
+  | @<a href='http://citationstyles.org/'>Formatted text citation@</a>                                           | text/x-bibliography                     | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
+  | @<a href='http://en.wikipedia.org/wiki/RIS\_(file\_format)'>RIS@</a>                                         | application/x-research-info-systems     | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  | @<span class='label label-important'>No@</span>  |
+  | @<a href='http://en.wikipedia.org/wiki/BibTeX'>BibTeX@</a>                                                   | application/x-bibtex                    | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  | @<span class='label label-success'>Yes@</span>  |
+  | @<a href='http://www.crossref.org/schema/documentation/unixref1.1/unixref1.1.html'>CrossRef Unixref XML@</a> | application/vnd.crossref.unixref+xml    | @<span class='label label-success'>Yes@</span>  | @<span class='label label-important'>No@</span> | @<span class='label label-important'>No@</span> |
+  | @<a href='http://schema.datacite.org/'>DataCite XML@</a>                                                     | application/vnd.datacite.datacite+xml   | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  | @<span class='label label-important'>No@</span> |
+  | @<a href='http://www.medra.org/en/schema.htm'>ONIX for DOI@</a>                                              | application/vnd.medra.onixdoi+xml       | @<span class='label label-important'>No@</span> | @<span class='label label-important'>No@</span> | @<span class='label label-success'>Yes@</span>  |
 
-  Using content negotation it is possible to make a request that favours content types
+  Using content negotiation it is possible to make a request that favours content types
   specific to a particular registration agency but which will also  degrade to respond 
   with a more standard content type for other registration agencies. For example:
 
@@ -164,7 +165,7 @@
 
 ** Formatted Citations
 
-  Both CrossRef and DataCite support formatted citations via the text/bibliography
+  CrossRef, DataCite and mEDRA support formatted citations via the text/bibliography
   content type. These are the output of the 
   @<a href='http://citationstyles.org/'>Citation Style Language@</a> processor, 
   citeproc-js. The content type can take two additional parameters to customise its
@@ -193,7 +194,7 @@
     de http://dx.doi.org/10.1126/science.169.3946.635
   #+END_EXAMPLE
 
-* DataCite Link-based Content Type Requests
+* Link-based Content Type Requests
 
   DataCite supports link-based content type requests, for example:
 
@@ -202,9 +203,17 @@
   #+END_EXAMPLE
 
   For documentation see http://data.datacite.org.
+  
+  CrossRef also supports link-based content type requests via their REST API:
+
+  #+BEGIN_EXAMPLE
+  $ curl http://api.crossref.org/works/10.5555/12345678/transform/application/x-bibtex
+  #+END_EXAMPLE
+
+  For documentation see http://api.crossref.org.
 
 * Getting Help
 
-  Please contact labs@crossref.org or tech@datacite.org for support.
+  Please contact labs@crossref.org, tech@datacite.org or medrastaff@cineca.it for support.
 
 #+HTML: </div>
